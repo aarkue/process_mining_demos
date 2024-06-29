@@ -6,7 +6,8 @@ const workerImportMetaUrlRE =
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {outDir: "../docs/petri_net_wasm/", emptyOutDir: true},
+  build: { outDir: "../docs/petri_net_wasm/", emptyOutDir: true,},
+  base: '',
   worker: {
     format: "es",
     plugins: () => [
@@ -14,14 +15,10 @@ export default defineConfig({
         name: "worker-fix",
         enforce: "pre",
         transform(code, id) {
-          if (
-            code.includes("new Worker") &&
-            code.includes("new URL") &&
-            code.includes("import.meta.url")
-          ) {
+          if (code.includes("new Worker") && code.includes("new URL") && code.includes("import.meta.url")) {
             const result = code.replace(
               workerImportMetaUrlRE,
-              `((() => { throw new Error('Nested workers are disabled') })()`,
+              `((() => { throw new Error('Nested workers are disabled') })()`
             );
             return result;
           }

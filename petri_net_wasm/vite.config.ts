@@ -6,6 +6,7 @@ const workerImportMetaUrlRE =
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {outDir: "../docs/petri_net_wasm/", emptyOutDir: true},
   worker: {
     format: "es",
     plugins: () => [

@@ -3,37 +3,54 @@ import { BackendProviderContext } from "./backend-context";
 import { OCELInfo } from "./types/ocel";
 import toast from "react-hot-toast";
 import OcelGraphViewer from "./OcelGraph";
+import { Button } from "./components/ui/button";
 
 function App() {
   const backend = useContext(BackendProviderContext);
   const [ocelInfo, setOcelInfo] = useState<OCELInfo>();
+  const [backendOfflineError, setBackendOfflineError] = useState<{ available?: boolean; message?: string }>({});
   useEffect(() => {
     backend["ocel/info"]()
       .then((info) => {
         setOcelInfo(info);
+        setBackendOfflineError({ available: true });
       })
       .catch((e) => {
         console.error(e);
+        setBackendOfflineError({ available: false, message: e.toString() });
         setOcelInfo(undefined);
       });
   }, [backend]);
   return (
     <>
       <div className="text-center px-4 mx-auto pt-4 w-full h-full flex flex-col">
-        <h1 className="font-black text-4xl text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">OCEL Graph Explorer</h1>
+        <h1 className="font-black text-4xl text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">
+          OCEL Graph Explorer
+        </h1>
         {ocelInfo && (
           <div className="mb-4">
             <h2 className="font-bold text-2xl text-green-700">OCEL Loaded</h2>
             {ocelInfo.num_events} Events and {ocelInfo.num_objects} Objects
           </div>
         )}
-        {!ocelInfo && (
+        {!backendOfflineError.available && (
+          <div className="my-4">
+            <h2 className="font-bold text-2xl text-red-700">Backend Error</h2>
+            <h3>Are you sure the backend is running locally on localhost:3000?</h3>
+            <p className="text-xs text-red-800 mb-2">{backendOfflineError.message ?? "Unknown Error"}</p>
+            <Button variant="outline" onClick={() => window.location.reload()}>
+              Reload
+            </Button>
+          </div>
+        )}
+        {backendOfflineError.available && !ocelInfo && (
           <div className="mb-4">
-            <h2 className="font-bold text-2xl text-orange-700">No OCEL Loaded</h2>
+            <h2 className="font-bold text-xl text-emerald-700">Backend Available</h2>
+            <h2 className="font-bold text-2xl text-fuchsia-700">No OCEL Loaded</h2>
             Select an OCEL2.0 XML/JSON file below.
           </div>
         )}
-        <OCELUploadForm onFinish={(info) => setOcelInfo(info)} />
+        {backendOfflineError.available && <OCELUploadForm onFinish={(info) => setOcelInfo(info)} />}
         {ocelInfo && (
           <div className="w-full h-full py-2">
             <OcelGraphViewer ocelInfo={ocelInfo} />

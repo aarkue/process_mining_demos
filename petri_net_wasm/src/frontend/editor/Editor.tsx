@@ -27,7 +27,7 @@ import React, {
 import type { Connection, Edge, Node, ReactFlowJsonObject } from "reactflow";
 import DownloadSVGButton from "./helpers/download-svg-button";
 import ImportPNMLButton from "./helpers/import-pnml-button";
-import { useLayoutedElements } from "./helpers/Layout";
+import { applyElkLayoutToNodes, useLayoutedElements } from "./helpers/Layout";
 
 import * as Comlink from "comlink";
 import workerImport from "../worker?worker&url";
@@ -35,6 +35,7 @@ import { WorkerAPI } from "../types";
 
 import { v4 as uuidv4 } from "uuid";
 import ExportPNMLButton from "./helpers/export_pnml";
+import { pnJsonToEditor } from "./helpers/pn_json";
 
 const nodeTypes = {
   transition: TransitionNode,
@@ -252,16 +253,48 @@ function InnerEditor() {
       <Controls showInteractive={false} />
       <Panel
         position="top-center"
-        className="flex gap-x-2 w-full px-4 bg-white"
+        className="flex justify-start gap-2 w-full px-4 bg-white flex-wrap"
       >
         <div
-          className={`px-2 rounded py-2 ${
+          className={`px-2 rounded py-2 font-semibold ${
             workerStatus === "ready"
               ? "bg-green-100 text-green-900 border-green-500 border-2"
               : "bg-white"
           } border`}
         >
-          Worker {workerStatus}
+          WASM Worker <br />
+          {workerStatus}
+        </div>{" "}
+        <div style={{ width: "1rem" }}></div>
+        <div className="px-2 rounded py-2 text-sm flex items-center bg-fuchsia-100 border-fuchsia-400 border">
+          <span className="font-semibold mr-2">
+            Discover from XES
+            <br />
+            (Alpha+++)
+          </span>
+          <input
+            accept=".xes,.xes.gz"
+            className="w-[5rem]"
+            type="file"
+            onChange={async (ev) => {
+              if (ev.currentTarget.files?.length) {
+                const file = ev.currentTarget.files[0];
+                if (file) {
+                  console.log({ file }, file.type);
+                  const pnJson = await workerAPI.discover_petri_net_from_xes(
+                    new Uint8Array(await file.arrayBuffer()),
+                    file.name.endsWith(".gz"),
+                  );
+                  const pn = JSON.parse(pnJson);
+
+                  const { nodes, edges } = pnJsonToEditor(pn);
+                  await applyElkLayoutToNodes(nodes, edges);
+                  setNodes(nodes);
+                  setEdges(edges);
+                }
+              }
+            }}
+          />
         </div>
         <div style={{ width: "1rem" }}></div>
         <ImportPNMLButton workerAPI={workerAPI} />
@@ -281,7 +314,7 @@ function InnerEditor() {
         >
           Layout (Dot)
         </PanelButton>
-        <div style={{ width: "1rem" }}></div>
+        {/* <div style={{ width: "1rem" }}></div> */}
         <DownloadSVGButton workerAPI={workerAPI} />
         <div style={{ width: "1rem" }}></div>
         <PanelButton
@@ -299,7 +332,6 @@ function InnerEditor() {
         >
           Add Place
         </PanelButton>
-
         <PanelButton
           onClick={() => {
             setNodes([
@@ -315,7 +347,6 @@ function InnerEditor() {
         >
           Add Transition
         </PanelButton>
-
         <PanelButton
           onClick={() => {
             const initialIDs = [uuidv4(), uuidv4()];

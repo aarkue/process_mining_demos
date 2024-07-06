@@ -5,15 +5,19 @@ import { v4 as uuidv4 } from "uuid";
 import { NodeData } from "../TransitionNode";
 
 export function editorToJsonPN(
-  nodes: Node<{ label?: string }>[],
+  nodes: Node<{ label?: string; initialTokens?: number }>[],
   edges: Edge<unknown>[],
 ): PetriNet {
   const pn: PetriNet = { places: {}, transitions: {}, arcs: [] };
+  const initial_marking: Record<string, number> = {};
   for (const node of nodes) {
     if (node.type === "transition") {
       pn.transitions[node.id] = { id: node.id, label: node.data.label ?? null };
     } else {
       pn.places[node.id] = { id: node.id };
+      if (node.data.initialTokens) {
+        initial_marking[node.id] = node.data.initialTokens ?? 0;
+      }
     }
   }
   for (const edge of edges) {
@@ -28,6 +32,9 @@ export function editorToJsonPN(
       weight: 1,
     });
   }
+  if (Object.keys(initial_marking).length > 0) {
+    pn.initial_marking = initial_marking;
+  }
   return pn;
 }
 
@@ -41,10 +48,15 @@ export function pnJsonToEditor(pn: PetriNet): { nodes: Node[]; edges: Edge[] } {
     }),
   );
 
-  const places: Node<unknown>[] = Object.values(pn.places).map((t) => ({
+  const places: Node<{ initialTokens?: number }>[] = Object.values(
+    pn.places,
+  ).map((t) => ({
     id: t.id,
     type: "place",
-    data: {},
+    data: {
+      initialTokens:
+        pn.initial_marking !== undefined ? pn.initial_marking[t.id] : undefined,
+    },
     position: { x: 0, y: 0 },
   }));
 

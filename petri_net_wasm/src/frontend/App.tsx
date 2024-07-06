@@ -4,7 +4,7 @@ import Editor from "./editor/Editor";
 function App() {
   return (
     <>
-      <div className="flex flex-col h-full w-full">
+      <div className="flex flex-col h-full w-full max-w-full mx-auto px-2">
         <h1 className="font-black text-4xl mt-2">Petri Net Editor</h1>
         <div className="w-full h-full">
           <Editor />

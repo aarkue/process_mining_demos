@@ -70,12 +70,12 @@ pub fn wasm_discover_alphappp_petri_net_from_xes_vec(
     let (pn, _) = alphappp_discover_petri_net_with_timing_fn(
         &log_proj,
         AlphaPPPConfig {
-            balance_thresh: 0.1,
+            balance_thresh: 0.2,
             fitness_thresh: 0.8,
-            replay_thresh: 0.3,
+            replay_thresh: 0.5,
             log_repair_skip_df_thresh_rel: 4.0,
             log_repair_loop_df_thresh_rel: 4.0,
-            absolute_df_clean_thresh: 5,
+            absolute_df_clean_thresh: 0,
             relative_df_clean_thresh: 0.05,
         },
         &|| 0,

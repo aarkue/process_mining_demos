@@ -9,7 +9,7 @@ This repository contains the following software projects, which are all based on
 
 All of these projects require Rust (see https://www.rust-lang.org/tools/install) and all of them except `log_strip` also require [Node.js](https://nodejs.org/en/download/) to be installed.
 
-
+For running any of the demo applications, first navigate to the corresponding folder.
 ## `log_strip`
 ![log_stripper](https://github.com/aarkue/process_mining_demos/assets/20766652/a0c7cca1-4b1e-4b3c-9aae-5a23a57be24e)
 

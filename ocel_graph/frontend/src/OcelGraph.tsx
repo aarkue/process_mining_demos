@@ -300,7 +300,7 @@ function GraphOptions({
     maxDistance: 2,
     relsSizeIgnoreThreshold: 10,
     rootIsObject: true,
-    root: ocelInfo.object_ids[0],
+    root: ocelInfo.object_ids[0] ?? "",
     spanningTree: true,
   });
   const [loading, setLoading] = useState(false);

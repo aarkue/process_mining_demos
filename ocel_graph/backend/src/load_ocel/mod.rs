@@ -21,7 +21,6 @@ pub struct OCELFilePath {
   path: &'static str,
 }
 
-pub const DEFAULT_OCEL_FILE: &str = "order-management.json";
 pub const DATA_PATH: &str = "./data/";
 
 pub async fn get_available_ocels() -> (StatusCode, Json<Option<Vec<String>>>) {

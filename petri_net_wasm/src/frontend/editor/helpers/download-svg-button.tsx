@@ -7,7 +7,7 @@ import { PanelButton } from "../Editor";
 function downloadImage(dataUrl: string) {
   const a = document.createElement("a");
 
-  a.setAttribute("download", "png.svg");
+  a.setAttribute("download", "petri-net.svg");
   a.setAttribute("href", dataUrl);
   a.click();
 }
@@ -26,7 +26,7 @@ function DownloadSVGButton({ workerAPI }: { workerAPI: WorkerAPI }) {
 
   return (
     <>
-      <PanelButton onClick={() => onClick()}>Download SVG</PanelButton>
+      <PanelButton onClick={() => onClick()}>Export SVG</PanelButton>
     </>
   );
 }

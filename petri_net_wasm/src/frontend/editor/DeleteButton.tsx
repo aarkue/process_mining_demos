@@ -11,14 +11,16 @@ export default function DeleteButton(props: DeleteButtonProps) {
         ev.preventDefault();
         ev.stopPropagation();
         if ("nodeID" in props) {
-          setNodes((ns) => {  
+          setNodes((ns) => {
             const newNodes = ns.filter((n) => n.id !== props.nodeID);
             return newNodes;
           });
           setEdges((es) => {
-            const newEdges = es.filter((e) => e.source !== props.nodeID && e.target !== props.nodeID);
+            const newEdges = es.filter(
+              (e) => e.source !== props.nodeID && e.target !== props.nodeID,
+            );
             return newEdges;
-          })
+          });
         } else {
           setEdges((es) => {
             const newEdges = es.filter((n) => n.id !== props.edgeID);

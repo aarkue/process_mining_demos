@@ -301,7 +301,7 @@ function GraphOptions({
     relsSizeIgnoreThreshold: 10,
     rootIsObject: true,
     root: ocelInfo.object_ids[0] ?? "",
-    spanningTree: true,
+    spanningTree: false,
   });
   const [loading, setLoading] = useState(false);
   return (

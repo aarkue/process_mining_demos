@@ -1,5 +1,16 @@
 # Rust4PM Demos
 
+## Video
+
+
+https://github.com/aarkue/rust4pm_demos/assets/20766652/141017ed-7c93-46ff-a234-befbb04309ab
+
+
+
+
+
+
+## Overview
 This repository contains the following software projects, which are all based on the Rust crate `process_mining` (See https://crates.io/crates/process_mining and https://github.com/aarkue/rust4pm/).
 
 - `log_strip`: CLI for Stripping XES Attributes
